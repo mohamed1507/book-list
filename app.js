@@ -53,7 +53,7 @@ class UI {
     }
 }
 
-class store {
+class Store {
     static getBooks() {
         let books
         if (localStorage.getItem('books') === null) {
@@ -65,30 +65,32 @@ class store {
         return books;
     }
     static displayBook() {
-        books.foreach(function (book) {
-            const ui = new UI
+        const books = Store.getBooks()
+        books.forEach(function (book) {
+            const ui = new UI()
 
             ui.addBookToList(book)
         })
-
+        console.log(books)
     }
     static addBook(book) {
-        const books = store.getBooks()
+        const books = Store.getBooks()
         books.push(book)
         localStorage.setItem('books', JSON.stringify(books))
     }
     static removeBook(isbn) {
-        const books = store.getBooks()
-        books.foreach(function (book,index) {
-        if(book.isbn===isbn){
-            books.splice(index,1)
-        }
+        const books = Store.getBooks()
+        books.forEach(function (book, index) {
+            if (book.isbn === isbn) {
+                books.splice(index, 1)
+            }
         })
         localStorage.setItem('books', JSON.stringify(books))
+        console.log(books)
     }
 }
 
-document.addEventListener('DOMContentLoaded', store.displayBooks)
+document.addEventListener('DOMContentLoaded', Store.displayBook)
 
 
 
@@ -111,7 +113,7 @@ document.getElementById('book-form').addEventListener('submit', function (e) {
     } else {
         ui.addBookToList(book)
         // add to ls
-        store.addBook(book)
+        Store.addBook(book)
 
         ui.showAlert('book added', 'success')
 
@@ -133,7 +135,7 @@ document.getElementById('book-list').addEventListener('click', function (e) {
     const ui = new UI()
     ui.deleteBook(e.target)
     // remove from ls
-    store.removeBook(e.target.parentElement.previousElementSiblings.textContent)
+    Store.removeBook(e.target.parentElement.previousElementSibling.textContent)
     // show message
     ui.showAlert('Book Removed', 'success')
     e.preventDefault()
